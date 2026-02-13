@@ -6,7 +6,7 @@ import { CategoryType } from "@/types/category";
 import Link from "next/link";
 
 const ChooseCategories = () => {
-  const { result = [], loading, error } = GetProducts();
+  const { result, loading, error } = GetProducts();
 
   return (
     <div className="max-w-7xl py-8 mx-auto px-4 sm:py-12 sm:px-6 lg:px-8">
@@ -16,8 +16,8 @@ const ChooseCategories = () => {
 
       {/* Grid responsive en todas las pantallas */}
       <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 sm:gap-6 lg:gap-8">
-        {!loading && result !== undefined && (
-          result.map((categoria: CategoryType) => (
+        {!loading &&
+          result?.map((categoria: CategoryType) => (
             <Link
               key={categoria.id}
               href={`/categoria/${categoria.slug}`}
@@ -40,7 +40,7 @@ const ChooseCategories = () => {
               </p>
             </Link>
           ))
-        )}
+        }
       </div>
 
       {/* Estado de carga */}
@@ -53,6 +53,11 @@ const ChooseCategories = () => {
             </div>
           ))}
         </div>
+      )}
+
+      {/* Estado de error o sin datos */}
+      {!loading && !result && (
+        <p className="text-center text-gray-500">No hay categorías disponibles</p>
       )}
     </div>
   )

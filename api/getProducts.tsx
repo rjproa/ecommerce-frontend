@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
+import { CategoryType } from "@/types/category";
 
 export function GetProducts() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories?populate=*`
 
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [result, setResult] = useState<CategoryType[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     (async () => {
@@ -27,5 +28,4 @@ export function GetProducts() {
   }, [url])
 
   return { result, loading, error }
-
 }
