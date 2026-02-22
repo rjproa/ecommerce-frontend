@@ -1,8 +1,8 @@
 export type CategoryType = {
   id: number;
-  categoryName: string;
+  nombreCategoria: string;
   slug: string;
-  mainImage: {
+  imagenCategoria: {
     url: string;
   }
 }

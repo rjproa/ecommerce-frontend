@@ -6,11 +6,11 @@ export default function HomeBanner() {
     <section className="w-full">
       <div className="relative w-full h-[40vh] sm:h-[60vh] max-h-[80vh]">
         <Image
-          src="/banner.png"
+          src="/women-6921434_1920.jpg"
           alt="Banner principal"
           fill
           priority
-          className="object-cover object-[50%_25%]"
+          className="object-cover object-[50%_55%]"
         />
       </div>
     </section>

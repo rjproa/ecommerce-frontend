@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react"
+"use client";
+
+import { ProductType } from "@/types/product";
+import { useEffect, useState } from "react";
 
 export function GetAllProducts() {
-  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?populate=*`
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?populate=*`;
 
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [result, setResult] = useState<ProductType[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     (async () => {
@@ -14,7 +17,7 @@ export function GetAllProducts() {
         const json = await res.json();
         setResult(json.data)
         setLoading(false)
-      } catch (error: unknown) {
+      } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
         } else {
@@ -27,5 +30,4 @@ export function GetAllProducts() {
   }, [url])
 
   return { result, loading, error }
-
 }

@@ -8,16 +8,16 @@ const dataCarousel = [
   {
     id: 1,
     title: "Ofertas",
-    description: "Obtén envíos gratis por compras mayores a s/ 79.90",
+    description: "Obtén descuentos exclusivos en productos seleccionados",
   },
   {
     id: 2,
     title: "Nuevos productos",
-    description: "Productos de moda con descuentos exclusivos",
+    description: "Productos de moda con los mejores precios",
   }, {
     id: 3,
     title: "Obtén promociones registrandote",
-    description: "Regístrate y recibe descuentos exclusivos",
+    description: "Regístrate en la primera compra y participa en regalos exclusivos ",
   }
 ];
 
@@ -25,7 +25,7 @@ const CarouselBanner = () => {
 
   return (
     <div className="bg-gray-200">
-      <Carousel className="w-full max-w-4xl mx-auto" plugins={[Autoplay({ delay: 2000 })]}>
+      <Carousel className="w-full max-w-4xl mx-auto" plugins={[Autoplay({ delay: 2500 })]}>
 
         <CarouselContent>
           {dataCarousel.map(({ id, title, description }) => (

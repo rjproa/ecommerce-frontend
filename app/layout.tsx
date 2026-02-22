@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Laila",
-  description: "Bienvenido a mi tienda virtual de Ropa y Accesorios de Moda | Laila",
+  title: "S H A N T I",
+  description: "Bienvenido a mi tienda virtual de Ropa y Accesorios de Moda | SHANTI",
 };
 
 export default function RootLayout({
