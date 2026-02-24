@@ -30,7 +30,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
   {
     title: "Corset",
-    href: "/catalogo/corsets",
+    href: "/catalogo/corset",
     description:
       "Corsets ideales para resaltar tu estilo en cualquier ocasión.",
   },
@@ -86,7 +86,7 @@ const MenuList = () => {
                   </Link>
                 </NavigationMenuLink>
                 <NavigationMenuLink asChild className="hover:bg-gray-200/60 rounded-xl">
-                  <Link href="https://www.tiktok.com/@shanti.blush" className="flex-row items-center gap-2" target="_blank"
+                  <Link href="https://www.tiktok.com/@shanti.blush2" className="flex-row items-center gap-2" target="_blank"
                     rel="noopener noreferrer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" width="800px" height="800px" viewBox="0 0 32 32" version="1.1">
                       <title>tiktok</title>

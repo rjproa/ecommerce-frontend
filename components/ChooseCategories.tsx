@@ -20,7 +20,7 @@ const ChooseCategories = () => {
           result?.map((categoria: CategoryType) => (
             <Link
               key={categoria.id}
-              href={`/categoria/${categoria.slug}`}
+              href={`/catalogo/${categoria.slug}`}
               className="group flex flex-col items-center gap-2 sm:gap-3"
             >
               {/* Círculo con imagen */}

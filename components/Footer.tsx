@@ -32,7 +32,7 @@ const Footer = () => {
     {
       id: 2,
       name: 'TikTok',
-      link: 'https://www.tiktok.com/@shanti.blush',
+      link: 'https://www.tiktok.com/@shanti.blush2',
       ariaLabel: 'Visita nuestro TikTok',
       type: 'tiktok'
     }

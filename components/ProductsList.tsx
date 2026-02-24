@@ -4,12 +4,10 @@ import { GetAllProducts } from "@/api/getAllProducts";
 import { ProductType } from "@/types/product";
 import { ResponseType } from "@/types/response";
 import SkeletonSchema from "./SkeletonShema";
-import { Card, CardContent } from "./ui/card";
-import Image from "next/image";
-import { Expand, ShoppingCart, ChevronDown, ArrowRight } from "lucide-react";
-import IconButton from "./IconButton";
+import { ChevronDown, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ProductCard from "./ProductCard";
 
 const ProductList = () => {
   const { loading, result } = GetAllProducts() as ResponseType<ProductType[]>;
@@ -40,54 +38,16 @@ const ProductList = () => {
       {!loading && result && Array.isArray(result) && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 xl:px-1">
-            {displayedProducts.map((product: ProductType) => {
-              const { images, productName, id, price } = product;
-
-              if (!images || images.length === 0) {
-                return null;
-              }
-
-              return (
-                <div key={id} className="group">
-                  <Card className="flex flex-col justify-between py-0 border border-gray-200 shadow-none overflow-hidden">
-                    <CardContent className="relative w-full aspect-square px-4">
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${images[0].url}`}
-                        alt={productName}
-                        fill
-                        className="object-contain"
-                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      />
-                      <div className="absolute w-full px-6 transition duration-200 opacity-0 group-hover:opacity-100 bottom-5 left-0">
-                        <div className="flex justify-center gap-x-6">
-                          <IconButton
-                            onClick={() => console.log('click')}
-                            icon={<Expand size={20} />}
-                            className="text-gray-600 cursor-pointer"
-                          />
-                          <IconButton
-                            onClick={() => console.log('click')}
-                            icon={<ShoppingCart size={20} />}
-                            className="text-gray-600 cursor-pointer"
-                          />
-                        </div>
-                      </div>
-                    </CardContent>
-                    <div className="wrap flex items-center justify-between px-4">
-                      <h3 className="text-md truncate">{productName}</h3>
-                    </div>
-                    <div className="px-4 pb-4">
-                      <span className="text-md font-bold text-gray-700 rounded-full mr-3">
-                        s/ {price}
-                      </span>
-                      <span className="text-md text-gray-500 line-through">
-                        s/ {price + 20}
-                      </span>
-                    </div>
-                  </Card>
-                </div>
-              );
-            })}
+            {displayedProducts.map((product: ProductType) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                productName={product.productName}
+                slug={product.slug}
+                price={product.price}
+                images={product.images}
+              />
+            ))}
           </div>
 
           {hasMore && !showAll && (
