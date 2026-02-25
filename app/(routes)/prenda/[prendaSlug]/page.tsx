@@ -83,7 +83,11 @@ export default function Page() {
           {/* Imagen principal */}
           <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden">
             <Image
-              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${product.images[selectedImage].url}`}
+              // src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${product.images[selectedImage].url}`}
+              src={product.images[selectedImage].url.startsWith('http')
+                ? product.images[selectedImage].url
+                : `${process.env.NEXT_PUBLIC_BACKEND_URL}${product.images[selectedImage].url}`
+              }
               alt={product.productName}
               fill
               className="object-contain p-4"

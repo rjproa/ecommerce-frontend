@@ -55,7 +55,11 @@ export default function ProductCard({
           onMouseLeave={() => setIsHovered(false)}
         >
           <Image
-            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${currentImage.url}`}
+            // src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${currentImage.url}`}
+            src={currentImage.url.startsWith('http')
+              ? currentImage.url
+              : `${process.env.NEXT_PUBLIC_BACKEND_URL}${currentImage.url}`
+            }
             alt={productName}
             fill
             className="object-cover transition-opacity duration-300"
