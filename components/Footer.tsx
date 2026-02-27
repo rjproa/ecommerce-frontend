@@ -4,21 +4,21 @@ import { Instagram } from "lucide-react";
 
 const Footer = () => {
   const dataFooter = [
-    {
-      id: 1,
-      name: 'Catálogo',
-      link: '/catalogo'
-    },
+    // {
+    //   id: 1,
+    //   name: 'Catálogo',
+    //   link: '/catalogo'
+    // },
     {
       id: 2,
       name: 'Mi cuenta',
       link: '/perfil'
     },
-    {
-      id: 4,
-      name: 'Términos y condiciones',
-      link: '/terminos-y-condiciones'
-    }
+    // {
+    //   id: 4,
+    //   name: 'Términos y condiciones',
+    //   link: '/terminos-y-condiciones'
+    // }
   ];
 
   const socialMedia = [

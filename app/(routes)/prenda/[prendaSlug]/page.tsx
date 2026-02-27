@@ -109,7 +109,11 @@ export default function Page() {
                     }`}
                 >
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${image.url}`}
+                    // src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${image.url}`}
+                    src={image.url.startsWith('http')
+                      ? image.url
+                      : `${process.env.NEXT_PUBLIC_BACKEND_URL}${image.url}`
+                    }
                     alt={`${product.productName} - imagen ${index + 1}`}
                     fill
                     className="object-contain p-1"
