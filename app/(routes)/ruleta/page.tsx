@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -52,6 +52,12 @@ function RuletaContent() {
   const [yaGiro, setYaGiro] = useState(false);
   const currentRotation = useRef(0);
   const wheelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!getUserData()) {
+      router.push("/perfil");
+    }
+  }, []);
 
   const habilitado = userData?.habilitado ?? false;
 
