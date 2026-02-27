@@ -114,6 +114,7 @@ export default function Perfil() {
             habilitado: cliente.habilitado,
             puntos: cliente.puntos,
             codigo: cliente.codigo,
+            opcion: cliente.opcion, // 👈 agrega esto
           };
 
           console.log('💾 Guardando en localStorage:', userData);

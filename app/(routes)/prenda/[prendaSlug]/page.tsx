@@ -77,7 +77,7 @@ export default function Page() {
         <span>Volver</span>
       </button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
         {/* Galería de imágenes */}
         <div className="space-y-4">
           {/* Imagen principal */}
