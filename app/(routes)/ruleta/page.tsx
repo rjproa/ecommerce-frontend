@@ -103,6 +103,7 @@ function RuletaContent() {
         );
         const data = await response.json();
         if (response.ok && data.success) {
+          console.log('data.cliente:', data.cliente); // 👈 agrega esto
           const nuevoUserData = { ...data.cliente, opcion: userData.opcion };
           localStorage.setItem("userData", JSON.stringify(nuevoUserData));
           setUserData(nuevoUserData);
