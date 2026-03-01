@@ -138,15 +138,15 @@ export default function Page() {
           </h1>
 
           {/* Precio */}
-          <div className="flex items-baseline gap-4">
+          <div className="flex items-baseline gap-6">
             <span className="text-3xl font-bold text-gray-900">
               s/ {product.price}
             </span>
-            <span className="text-xl text-gray-400 line-through">
-              s/ {product.price + 20}
+            <span className="text-sm text-gray-800 line-through">
+              s/ {product.price + 10.9}
             </span>
             <span className="text-sm text-green-600 font-medium">
-              Ahorra s/ 20
+              Ahorra más de s/ 10
             </span>
           </div>
 

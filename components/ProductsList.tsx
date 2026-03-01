@@ -8,6 +8,7 @@ import { ChevronDown, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import ProductCard from "./ProductCard";
+import { Reveal } from "./Reveal";
 
 const ProductList = () => {
   const { loading, result } = GetAllProducts() as ResponseType<ProductType[]>;
@@ -30,23 +31,26 @@ const ProductList = () => {
   const hasMore = result && result.length > maxProducts;
 
   return (
-    <div className="max-w-7xl mx-auto py-4 sm:py-16 sm:px-24 md:px-2">
-      <h3 className="px-2 text-3xl font-light sm:pb-8 xl:px-1">Nuestros productos</h3>
+    <div className="max-w-7xl mx-auto py-12 px-6 sm:py-16 xl:px-0">
+      <Reveal delay={300}>
+        <h3 className="mb-12 text-4xl font-light sm:pb-8 sm:mb-0">Nuestros productos</h3>
+      </Reveal>
 
       {loading && <SkeletonSchema grid={3} />}
 
       {!loading && result && Array.isArray(result) && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 xl:px-1">
-            {displayedProducts.map((product: ProductType) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                productName={product.productName}
-                slug={product.slug}
-                price={product.price}
-                images={product.images}
-              />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 xl:px-1">
+            {displayedProducts.map((product: ProductType, i: number) => (
+              <Reveal key={product.id} delay={Math.min((i % 4) * 100, 400) as 0 | 100 | 200 | 300 | 400}>
+                <ProductCard
+                  id={product.id}
+                  productName={product.productName}
+                  slug={product.slug}
+                  price={product.price}
+                  images={product.images}
+                />
+              </Reveal>
             ))}
           </div>
 

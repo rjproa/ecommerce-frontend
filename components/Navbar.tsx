@@ -76,7 +76,7 @@ const Navbar = () => {
       className={`fixed top-0 left-0 right-0 z-50 bg-white transition-shadow ${scrolled ? "shadow-sm" : ""
         }`}
     >
-      <div className="flex items-center justify-between p-4 sm:max-w-4xl md:max-w-7xl mx-auto xl:px-2">
+      <div className="flex items-center justify-between p-4 sm:max-w-4xl md:max-w-7xl mx-auto xl:px-0">
         <div className="flex sm:hidden self-end">
           <MenuMovile />
         </div>

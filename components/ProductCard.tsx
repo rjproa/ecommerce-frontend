@@ -65,7 +65,7 @@ export default function ProductCard({
             className="object-cover transition-opacity duration-300"
             sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
           />
-          <div className="absolute w-full px-6 transition duration-200 opacity-0 group-hover:opacity-100 bottom-5 left-0">
+          <div className="absolute w-full px-6 transition duration-200 lg:opacity-0 group-hover:opacity-100 bottom-5 left-0">
             <div className="flex justify-center gap-x-6">
               <IconButton
                 onClick={handleExpand}
@@ -84,11 +84,11 @@ export default function ProductCard({
           <h3 className="text-md truncate">{productName}</h3>
         </div>
         <div className="px-4 pb-4">
-          <span className="text-md font-bold text-gray-700 rounded-full mr-3">
+          <span className="text-md font-bold text-gray-700 rounded-full mr-5">
             s/ {price}
           </span>
-          <span className="text-md text-gray-500 line-through">
-            s/ {price + 20}
+          <span className="text-sm text-gray-400 line-through">
+            s/ {price + 10.9}
           </span>
         </div>
       </Card>

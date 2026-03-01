@@ -4,6 +4,7 @@ import { useGetCategoryProduct } from "@/api/getCategoryProduct";
 import { useParams } from "next/navigation";
 import SkeletonSchema from "@/components/SkeletonShema";
 import ProductCard from "@/components/ProductCard";
+import { Reveal } from "@/components/Reveal";
 
 interface ProductImage {
   id: number;
@@ -41,7 +42,7 @@ export default function Page() {
       <div className="mb-12 text-center">
         <div className="inline-block">
           <h1 className="text-4xl md:text-6xl font-light tracking-wide text-gray-900 mb-3 relative">
-            {categoryName.toUpperCase() || "cargando..."}
+            {categoryName.toUpperCase()}
             <span className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></span>
           </h1>
           <p className="text-sm tracking-[0.3em] text-gray-400 uppercase mt-4">
@@ -60,15 +61,17 @@ export default function Page() {
 
       {!loading && products.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 xl:px-1">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              productName={product.productName}
-              slug={product.slug}
-              price={product.price}
-              images={product.images}
-            />
+          {products.map((product, i: number) => (
+            <Reveal key={product.id} delay={Math.min((i % 4) * 100, 400) as 0 | 100 | 200 | 300 | 400}>
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                productName={product.productName}
+                slug={product.slug}
+                price={product.price}
+                images={product.images}
+              />
+            </Reveal>
           ))}
         </div>
       )}
