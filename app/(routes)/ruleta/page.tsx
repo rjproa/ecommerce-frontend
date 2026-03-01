@@ -117,8 +117,6 @@ function RuletaContent() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap');
-
         .ruleta-page {
           min-height: 100vh;
           background: #faf7f5;
@@ -272,8 +270,8 @@ function RuletaContent() {
 
         .wheel-container {
           position: relative;
-          width: 288px;
-          height: 288px;
+          width: 80vw;
+          height: 80vw;
           border-radius: 50%;
           overflow: hidden;
           box-shadow:
@@ -284,8 +282,8 @@ function RuletaContent() {
         }
 
         @media (min-width: 400px) {
-          .wheel-container { width: 320px; height: 320px; }
-          .wheel-deco { width: 380px; height: 380px; }
+          .wheel-container { width: 400px; height: 400px; }
+          .wheel-deco { width: 460px; height: 460px; }
         }
 
         .wheel-inner {

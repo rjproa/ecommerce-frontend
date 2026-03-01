@@ -1,164 +1,154 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import SkeletonSchema from "@/components/SkeletonShema";
+import ProductCard from "@/components/ProductCard";
+import { Reveal } from "@/components/Reveal";
+
+interface ProductImage {
+  id: number;
+  url: string;
+  name: string;
+  alternativeText: string | null;
+}
+
+interface Product {
+  id: number;
+  documentId: string;
+  productName: string;
+  slug: string;
+  description: string;
+  active: boolean;
+  price: number;
+  isFeatured: boolean;
+  images: ProductImage[];
+  categoria: {
+    nombreCategoria: string;
+    slug: string;
+  };
+}
 
 export default function Page() {
-  const router = useRouter();
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>("todos");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?populate=*`
+        );
+        const json = await res.json();
+        setAllProducts(json.data || []);
+      } catch (err) {
+        setError("Error al cargar los productos");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // Extraer categorías únicas
+  const categories = Array.from(
+    new Map(
+      allProducts
+        .filter((p) => p.categoria)
+        .map((p) => [p.categoria.slug, p.categoria])
+    ).values()
+  );
+
+  // Filtrar productos
+  const filteredProducts =
+    activeCategory === "todos"
+      ? allProducts
+      : allProducts.filter((p) => p.categoria?.slug === activeCategory);
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Jost:wght@300;400&display=swap');
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 xl:px-0 py-8 sm:py-16 mt-16">
 
-        .construction-page {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          background: #faf7f5;
-          font-family: 'Jost', sans-serif;
-          padding: 40px 24px;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .construction-page::before {
-          content: '';
-          position: fixed;
-          top: -200px; right: -200px;
-          width: 500px; height: 500px;
-          border-radius: 50%;
-          background: radial-gradient(circle, #f5e6ee 0%, transparent 70%);
-          pointer-events: none;
-        }
-
-        .construction-page::after {
-          content: '';
-          position: fixed;
-          bottom: -150px; left: -150px;
-          width: 450px; height: 450px;
-          border-radius: 50%;
-          background: radial-gradient(circle, #ede8f0 0%, transparent 70%);
-          pointer-events: none;
-        }
-
-        .inner {
-          position: relative;
-          z-index: 1;
-          text-align: center;
-          max-width: 420px;
-          animation: fadeUp 0.9s ease forwards;
-        }
-
-        .eyebrow {
-          font-size: 10px;
-          letter-spacing: 0.45em;
-          color: #b07a95;
-          text-transform: uppercase;
-          margin-bottom: 24px;
-        }
-
-        .icon-wrap {
-          width: 72px;
-          height: 72px;
-          border-radius: 50%;
-          background: #fdf0f5;
-          border: 1px solid #f0d8e4;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 28px;
-          font-size: 1.8rem;
-        }
-
-        .heading {
-          font-family: 'Cormorant Garamond', serif;
-          font-weight: 300;
-          font-size: clamp(2rem, 8vw, 2.8rem);
-          color: #2a1520;
-          line-height: 1.15;
-          margin-bottom: 16px;
-        }
-
-        .heading em {
-          font-style: italic;
-          color: #a0536e;
-        }
-
-        .description {
-          font-size: 13px;
-          color: #8a7080;
-          line-height: 1.75;
-          margin-bottom: 40px;
-        }
-
-        .divider {
-          width: 48px;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, #eadde5, transparent);
-          margin: 0 auto 40px;
-        }
-
-        .back-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          padding: 14px 40px;
-          border-radius: 50px;
-          border: none;
-          background: linear-gradient(135deg, #c4789a 0%, #a0536e 100%);
-          color: #fff;
-          font-family: 'Jost', sans-serif;
-          font-weight: 400;
-          font-size: 12px;
-          letter-spacing: 0.28em;
-          text-transform: uppercase;
-          cursor: pointer;
-          box-shadow: 0 8px 28px rgba(160, 83, 110, 0.32);
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .back-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 36px rgba(160, 83, 110, 0.42);
-        }
-
-        .back-btn:active {
-          transform: translateY(0);
-        }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(24px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
-      <div className="construction-page">
-        <div className="inner">
-          <p className="eyebrow">S · H · A · N · T · I</p>
-
-          <div className="icon-wrap">🛠️</div>
-
-          <h1 className="heading">
-            Página en<br /><em>construcción</em>
+      {/* ── Título ── */}
+      <div className="mb-10 text-center">
+        <div className="inline-block relative">
+          <h1 className="text-4xl md:text-6xl font-light tracking-wide text-gray-900 mb-3">
+            CATÁLOGO
           </h1>
-
-          <p className="description">
-            Estamos trabajando para traerte algo increíble.<br />
-            Vuelve pronto — valdrá la pena la espera.
-          </p>
-
-          <div className="divider" />
-
-          <button className="back-btn" onClick={() => router.push("/")}>
-            Volver al inicio
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
+          <span className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+          {/* <span className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></span> */}
         </div>
+        <p className="text-sm tracking-[0.3em] text-gray-400 uppercase mt-4">
+          Colección exclusiva
+        </p>
       </div>
-    </>
+
+      {/* ── Filtros ── */}
+      {!loading && categories.length > 0 && (
+        <div className="flex flex-wrap justify-center gap-2 mb-10">
+          <button
+            onClick={() => setActiveCategory("todos")}
+            className={`px-5 py-2 rounded-full text-sm tracking-wide transition-all duration-200 border ${activeCategory === "todos"
+              ? "bg-gray-900 text-white border-gray-900"
+              : "bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-gray-900"
+              }`}
+          >
+            Todos
+          </button>
+
+          {categories.map((cat) => (
+            <button
+              key={cat.slug}
+              onClick={() => setActiveCategory(cat.slug)}
+              className={`px-5 py-2 rounded-full text-sm tracking-wide transition-all duration-200 border ${activeCategory === cat.slug
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-gray-900"
+                }`}
+            >
+              {cat.nombreCategoria}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* ── Loading ── */}
+      {loading && <SkeletonSchema grid={4} />}
+
+      {/* ── Error ── */}
+      {error && (
+        <div className="text-center py-8">
+          <p className="text-red-500">{error}</p>
+        </div>
+      )}
+
+      {/* ── Productos ── */}
+      {!loading && filteredProducts.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 xl:px-1">
+          {filteredProducts.map((product, i) => (
+            <Reveal
+              key={product.id}
+              delay={Math.min((i % 4) * 100, 400) as 0 | 100 | 200 | 300 | 400}
+            >
+              <ProductCard
+                id={product.id}
+                productName={product.productName}
+                slug={product.slug}
+                price={product.price}
+                images={product.images}
+              />
+            </Reveal>
+          ))}
+        </div>
+      )}
+
+      {/* ── Sin productos ── */}
+      {!loading && filteredProducts.length === 0 && !error && (
+        <div className="text-center py-16">
+          <p className="text-gray-400 text-lg font-light">
+            No hay productos disponibles en esta categoría
+          </p>
+        </div>
+      )}
+    </div>
   );
 }

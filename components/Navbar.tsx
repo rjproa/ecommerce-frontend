@@ -82,7 +82,7 @@ const Navbar = () => {
         </div>
 
         <h1
-          className="text-xl xs:text-3xl cursor-pointer font-medium"
+          className="text-md xss:text-2xl xs:text-3xl cursor-pointer font-medium"
           onClick={() => router.push("/")}
         >
           S H A N T I

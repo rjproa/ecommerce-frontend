@@ -4,11 +4,11 @@ import { Facebook, Instagram } from "lucide-react";
 
 const Footer = () => {
   const dataFooter = [
-    // {
-    //   id: 1,
-    //   name: 'Catálogo',
-    //   link: '/catalogo'
-    // },
+    {
+      id: 1,
+      name: 'Catálogo',
+      link: '/catalogo'
+    },
     {
       id: 2,
       name: 'Mi cuenta',

@@ -3,6 +3,7 @@
 
 @theme {
   --breakpoint-xs: 30rem;
+  --breakpoint-xss: 25rem;
 }
 
 .reveal {
