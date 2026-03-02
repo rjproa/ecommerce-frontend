@@ -7,6 +7,7 @@ import { useSyncExternalStore, useRef, useEffect } from "react";
 import MenuList from "./MenuList";
 import MenuMovile from "./MenuMovile";
 import useCurrentPath from "@/hooks/usePathname";
+import CartSidebar from "./CardSidebar";
 
 function subscribe(callback: () => void) {
   window.addEventListener("storage", callback);
@@ -43,6 +44,10 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [cartCount, setCartCount] = useState(0);
+  const [cartOpen, setCartOpen] = useState(false);
+
+
 
   const userData = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
   const { isHome } = useCurrentPath();
@@ -66,6 +71,20 @@ const Navbar = () => {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const updateCart = () => {
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      setCartCount(cart.length);
+    };
+    updateCart();
+    window.addEventListener("storage", updateCart);
+    window.addEventListener("cartUpdated", updateCart); // 👈 agrega esto
+    return () => {
+      window.removeEventListener("storage", updateCart);
+      window.removeEventListener("cartUpdated", updateCart); // 👈 y esto
+    };
   }, []);
 
   const handleLogout = () => {
@@ -101,11 +120,23 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center justify-between gap-7">
-          <ShoppingCart
+          {/* <ShoppingCart
             strokeWidth="1.1"
             className={`cursor-pointer transition-transform duration-200 ease-out hover:scale-108 ${isTransparent ? "text-white" : "text-black"}`}
             onClick={() => router.push("/carrito")}
-          />
+          /> */}
+          <div className="relative">
+            <ShoppingCart
+              strokeWidth="1.1"
+              className={`cursor-pointer transition-transform duration-200 ease-out hover:scale-108 ${isTransparent ? "text-white" : "text-black"}`}
+              onClick={() => setCartOpen(true)}  // 👈 cambia esto
+            />
+            {cartCount >= 1 && (
+              <span className={`absolute -top-2 -right-2 w-5 h-5 rounded-full bg-black flex items-center justify-center text-xs font-bold text-white`}>
+                {cartCount > 99 ? "99+" : cartCount}
+              </span>
+            )}
+          </div>
           <ShoppingBag
             strokeWidth="1.1"
             className={`cursor-pointer transition-transform duration-200 ease-out hover:scale-108 ${isTransparent ? "text-white" : "text-black"}`}
@@ -161,6 +192,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
+      <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );
 };

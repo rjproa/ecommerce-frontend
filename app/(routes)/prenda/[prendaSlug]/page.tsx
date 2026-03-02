@@ -36,6 +36,8 @@ export default function Page() {
 
   const { result, loading, error } = useGetProductBySlug(prendaSlug as string);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [added, setAdded] = useState(false);
+
 
   const product: Product | null = result ? (result as Product[])[0] : null;
 
@@ -164,9 +166,24 @@ export default function Page() {
 
           {/* Botones de acción */}
           <div className="space-y-4">
-            <button className="w-full bg-gray-900 text-white py-4 rounded-md hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 font-medium cursor-pointer">
+            <button
+              onClick={() => {
+                const cart: string[] = JSON.parse(localStorage.getItem("cart") || "[]");
+                if (!cart.includes(product.slug)) {
+                  cart.push(product.slug);
+                  localStorage.setItem("cart", JSON.stringify(cart));
+                  window.dispatchEvent(new Event("cartUpdated"));
+                }
+                setAdded(true);
+                setTimeout(() => setAdded(false), 1500);
+              }}
+              className={`w-full py-4 rounded-md transition-all flex items-center justify-center gap-2 font-medium cursor-pointer ${added
+                ? "bg-green-700 text-white"
+                : "bg-gray-900 text-white hover:bg-gray-800"
+                }`}
+            >
               <ShoppingCart size={20} />
-              Agregar al carrito
+              {added ? "¡Agregado al carrito!" : "Agregar al carrito"}
             </button>
 
             {/* <button className="w-full border border-gray-300 text-gray-900 py-4 rounded-md hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 font-medium">

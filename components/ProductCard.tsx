@@ -33,6 +33,8 @@ export default function ProductCard({
 }: ProductCardProps) {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
+  const [added, setAdded] = useState(false);
+
 
   if (!images || images.length === 0) {
     return null;
@@ -73,8 +75,20 @@ export default function ProductCard({
                 className="text-gray-600 cursor-pointer"
               />
               <IconButton
-                onClick={() => onAddToCart ? onAddToCart(id) : console.log('add to cart', id)}
-                icon={<ShoppingCart size={20} />}
+                // onClick={() => onAddToCart ? onAddToCart(id) : console.log('add to cart', id)}
+                onClick={() => {
+                  const cart: string[] = JSON.parse(localStorage.getItem("cart") || "[]");
+                  if (!cart.includes(slug)) {
+                    cart.push(slug);
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    window.dispatchEvent(new Event("cartUpdated")); // 👈 agrega esta línea
+                    setAdded(true);
+                    setTimeout(() => setAdded(false), 1500);
+                  }
+                }}
+                // icon={<ShoppingCart size={20} />}
+                icon={<ShoppingCart size={20} color={added ? "#a0536e" : undefined} />}
+
                 className="text-gray-600 cursor-pointer"
               />
             </div>
