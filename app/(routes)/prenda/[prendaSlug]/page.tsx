@@ -161,6 +161,7 @@ export default function Page() {
               <p className="text-gray-600 leading-relaxed">
                 {product.description}
               </p>
+              <span className={`${product.active ? "hidden" : "text-red-500 font-bold mt-4 block px-2"}`}>AGOTADO</span>
             </div>
           )}
 
@@ -168,28 +169,26 @@ export default function Page() {
           <div className="space-y-4">
             <button
               onClick={() => {
-                const cart: string[] = JSON.parse(localStorage.getItem("cart") || "[]");
-                if (!cart.includes(product.slug)) {
-                  cart.push(product.slug);
-                  localStorage.setItem("cart", JSON.stringify(cart));
-                  window.dispatchEvent(new Event("cartUpdated"));
+                if (product.active) {
+                  const cart: string[] = JSON.parse(localStorage.getItem("cart") || "[]");
+                  if (!cart.includes(product.slug)) {
+                    cart.push(product.slug);
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    window.dispatchEvent(new Event("cartUpdated"));
+                  }
+                  setAdded(true);
+                  setTimeout(() => setAdded(false), 1500);
                 }
-                setAdded(true);
-                setTimeout(() => setAdded(false), 1500);
               }}
-              className={`w-full py-4 rounded-md transition-all flex items-center justify-center gap-2 font-medium cursor-pointer ${added
+              className={`w-full py-4 rounded-md transition-all flex items-center justify-center gap-2 font-medium ${added
                 ? "bg-green-700 text-white"
                 : "bg-gray-900 text-white hover:bg-gray-800"
-                }`}
+                } ${product.active ? " cursor-pointer" : "opacity-20 cursor-not-allowed"}`}
             >
               <ShoppingCart size={20} />
               {added ? "¡Agregado al carrito!" : "Agregar al carrito"}
             </button>
 
-            {/* <button className="w-full border border-gray-300 text-gray-900 py-4 rounded-md hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 font-medium">
-              <Heart size={20} />
-              Agregar a favoritos
-            </button> */}
           </div>
 
           {/* Información adicional */}

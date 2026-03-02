@@ -19,6 +19,7 @@ interface ProductCardProps {
   productName: string;
   slug: string;
   price: number;
+  active: boolean;
   images: ProductImage[];
   onAddToCart?: (id: number) => void;
 }
@@ -28,6 +29,7 @@ export default function ProductCard({
   productName,
   slug,
   price,
+  active,
   images,
   onAddToCart
 }: ProductCardProps) {
@@ -67,6 +69,19 @@ export default function ProductCard({
             className="object-cover transition-opacity duration-300"
             sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
           />
+
+          {!active && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <span
+                className="text-white text-lg font-semibold tracking-[0.3em] px-6 py-1 border border-white"
+                style={{ transform: 'rotate(-30deg)', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}
+              >
+                AGOTADO
+              </span>
+            </div>
+          )}
+
+
           <div className="absolute w-full px-6 transition duration-200 lg:opacity-0 group-hover:opacity-100 bottom-5 left-0">
             <div className="flex justify-center gap-x-6">
               <IconButton
@@ -74,22 +89,26 @@ export default function ProductCard({
                 icon={<Expand size={20} />}
                 className="text-gray-600 cursor-pointer"
               />
+
               <IconButton
                 // onClick={() => onAddToCart ? onAddToCart(id) : console.log('add to cart', id)}
                 onClick={() => {
-                  const cart: string[] = JSON.parse(localStorage.getItem("cart") || "[]");
-                  if (!cart.includes(slug)) {
-                    cart.push(slug);
-                    localStorage.setItem("cart", JSON.stringify(cart));
-                    window.dispatchEvent(new Event("cartUpdated")); // 👈 agrega esta línea
-                    setAdded(true);
-                    setTimeout(() => setAdded(false), 1500);
+                  if (active) {
+                    const cart: string[] = JSON.parse(localStorage.getItem("cart") || "[]");
+                    if (!cart.includes(slug)) {
+                      cart.push(slug);
+                      localStorage.setItem("cart", JSON.stringify(cart));
+                      window.dispatchEvent(new Event("cartUpdated")); // 👈 agrega esta línea
+                      setAdded(true);
+                      setTimeout(() => setAdded(false), 1500);
+                    }
                   }
+
                 }}
-                // icon={<ShoppingCart size={20} />}
                 icon={<ShoppingCart size={20} color={added ? "#a0536e" : undefined} />}
 
-                className="text-gray-600 cursor-pointer"
+                // className="text-gray-600 cursor-pointer"
+                className={`text-gray-600 ${active ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
               />
             </div>
           </div>

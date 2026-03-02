@@ -134,6 +134,7 @@ export default function Page() {
                 productName={product.productName}
                 slug={product.slug}
                 price={product.price}
+                active={product.active}
                 images={product.images}
               />
             </Reveal>

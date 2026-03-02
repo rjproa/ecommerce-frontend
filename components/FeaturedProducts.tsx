@@ -30,6 +30,7 @@ const FeaturedProducts = () => {
                       slug={product.slug}
                       price={product.price}
                       images={product.images}
+                      active={product.active}
                     />
                   </div>
                 </CarouselItem>
