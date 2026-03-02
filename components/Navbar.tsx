@@ -120,11 +120,6 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center justify-between gap-7">
-          {/* <ShoppingCart
-            strokeWidth="1.1"
-            className={`cursor-pointer transition-transform duration-200 ease-out hover:scale-108 ${isTransparent ? "text-white" : "text-black"}`}
-            onClick={() => router.push("/carrito")}
-          /> */}
           <div className="relative">
             <ShoppingCart
               strokeWidth="1.1"

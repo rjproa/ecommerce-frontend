@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import SkeletonSchema from "@/components/SkeletonShema";
 import ProductCard from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
@@ -28,66 +28,95 @@ interface Product {
   };
 }
 
+async function fetchAllProducts(): Promise<Product[]> {
+  const pageSize = 100;
+  let page = 1;
+  let all: Product[] = [];
+
+  while (true) {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+    );
+    const json = await res.json();
+    const data: Product[] = json.data || [];
+    all = [...all, ...data];
+
+    const total = json.meta?.pagination?.total ?? 0;
+    if (all.length >= total || data.length === 0) break;
+    page++;
+  }
+
+  return all;
+}
+
 export default function Page() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filtering, setFiltering] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("todos");
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const load = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?populate=*`
-        );
-        const json = await res.json();
-        setAllProducts(json.data || []);
+        const products = await fetchAllProducts();
+        setAllProducts(products);
       } catch (err) {
         setError("Error al cargar los productos");
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    load();
   }, []);
 
-  // Extraer categorías únicas
-  const categories = Array.from(
-    new Map(
-      allProducts
-        .filter((p) => p.categoria)
-        .map((p) => [p.categoria.slug, p.categoria])
-    ).values()
-  );
+  const categories = useMemo(() =>
+    Array.from(
+      new Map(
+        allProducts
+          .filter((p) => p.categoria)
+          .map((p) => [p.categoria.slug, p.categoria])
+      ).values()
+    ), [allProducts]);
 
-  // Filtrar productos
-  const filteredProducts =
+  const filteredProducts = useMemo(() =>
     activeCategory === "todos"
       ? allProducts
-      : allProducts.filter((p) => p.categoria?.slug === activeCategory);
+      : allProducts.filter((p) => p.categoria?.slug === activeCategory),
+    [activeCategory, allProducts]
+  );
+
+  const handleFilter = (slug: string) => {
+    if (slug === activeCategory) return;
+    setFiltering(true);
+    setActiveCategory(slug);
+    // Pequeño delay para que el skeleton sea visible
+    setTimeout(() => setFiltering(false), 350);
+  };
+
+  const showSkeleton = loading || filtering;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 xl:px-0 py-8 sm:py-16 mt-16">
 
-      {/* ── Título ── */}
+      {/* Título */}
       <div className="mb-10 text-center">
         <div className="inline-block relative">
           <h1 className="text-4xl md:text-6xl font-light tracking-wide text-gray-900 mb-3">
             CATÁLOGO
           </h1>
           <span className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
-          {/* <span className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></span> */}
         </div>
         <p className="text-sm tracking-[0.3em] text-gray-400 uppercase mt-4">
           Colección exclusiva
         </p>
       </div>
 
-      {/* ── Filtros ── */}
+      {/* Filtros */}
       {!loading && categories.length > 0 && (
         <div className="flex flex-wrap justify-center gap-2 mb-10">
           <button
-            onClick={() => setActiveCategory("todos")}
+            onClick={() => handleFilter("todos")}
             className={`px-5 py-2 rounded-full text-sm tracking-wide transition-all duration-200 border ${activeCategory === "todos"
               ? "bg-gray-900 text-white border-gray-900"
               : "bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-gray-900"
@@ -99,7 +128,7 @@ export default function Page() {
           {categories.map((cat) => (
             <button
               key={cat.slug}
-              onClick={() => setActiveCategory(cat.slug)}
+              onClick={() => handleFilter(cat.slug)}
               className={`px-5 py-2 rounded-full text-sm tracking-wide transition-all duration-200 border ${activeCategory === cat.slug
                 ? "bg-gray-900 text-white border-gray-900"
                 : "bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-gray-900"
@@ -111,18 +140,18 @@ export default function Page() {
         </div>
       )}
 
-      {/* ── Loading ── */}
-      {loading && <SkeletonSchema grid={4} />}
+      {/* Skeleton */}
+      {showSkeleton && <SkeletonSchema grid={4} />}
 
-      {/* ── Error ── */}
+      {/* Error */}
       {error && (
         <div className="text-center py-8">
           <p className="text-red-500">{error}</p>
         </div>
       )}
 
-      {/* ── Productos ── */}
-      {!loading && filteredProducts.length > 0 && (
+      {/* Productos */}
+      {!showSkeleton && filteredProducts.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 xl:px-1">
           {filteredProducts.map((product, i) => (
             <Reveal
@@ -142,8 +171,8 @@ export default function Page() {
         </div>
       )}
 
-      {/* ── Sin productos ── */}
-      {!loading && filteredProducts.length === 0 && !error && (
+      {/* Sin productos */}
+      {!showSkeleton && filteredProducts.length === 0 && !error && (
         <div className="text-center py-16">
           <p className="text-gray-400 text-lg font-light">
             No hay productos disponibles en esta categoría

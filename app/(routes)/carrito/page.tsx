@@ -282,25 +282,24 @@ export default function Page() {
     };
 
     const mensaje = `
-🛍️ *NUEVO PEDIDO - SHANTI*
+ *NUEVO PEDIDO - SHANTI*
 ━━━━━━━━━━━━━━━━━━━━━━
 
-👤 *DATOS DEL CLIENTE*
+ *DATOS DEL CLIENTE*
 - Nombre: ${nombres} ${apellidos}
-- Email: ${email || "No especificado"}
 - Celular: ${celular}
 - Documento: ${tipoDocTexto[tipoDoc] || "No especificado"} ${numDoc ? `- ${numDoc}` : ""}
 
-🧺 *PRODUCTOS SELECCIONADOS*
+ *PRODUCTOS SELECCIONADOS*
 ${lineasProductos}
 
-💰 *SUBTOTAL: S/ ${subtotal.toFixed(2)}*
+ *SUBTOTAL: S/ ${subtotal.toFixed(2)}*
 
-🚚 *TIPO DE ENTREGA*
+ *TIPO DE ENTREGA*
 - ${entregaTexto[tipoEntrega]}
 
 ━━━━━━━━━━━━━━━━━━━━━━
-¡Gracias por tu compra! Nos pondremos en contacto contigo a la brevedad para coordinar los detalles. 🌸
+¡Gracias por tu compra! Nos pondremos en contacto contigo a la brevedad para coordinar los detalles. 
   `.trim();
 
     const url = `https://wa.me/51903452600?text=${encodeURIComponent(mensaje)}`;
@@ -400,18 +399,18 @@ ${lineasProductos}
             </div>
 
             <div className="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center">
-              <span className="text-xs tracking-widest uppercase text-gray-400">Subtotal</span>
+              <span className="text-xs tracking-widest uppercase text-gray-400">Pago Total</span>
               <span className="text-lg font-medium text-gray-900">S/ {subtotal.toFixed(2)}</span>
             </div>
             <p className="text-xs text-gray-400 mt-1">
-              Impuestos y envío calculados al finalizar la compra
+              Costo de envío no incluido. Se coordinará al finalizar la compra.
             </p>
           </div>
 
           {/* Formulario */}
           <div className="bg-gray-50 rounded-2xl p-6 h-fit space-y-6">
             <h2 className="text-sm tracking-widest uppercase text-gray-700 font-medium">
-              Ingresa tus datos
+              Ingresa tus datos para envío
             </h2>
 
             <div className="grid grid-cols-2 gap-3">
@@ -424,19 +423,19 @@ ${lineasProductos}
               <input
                 value={apellidos}
                 onChange={(e) => setApellidos(e.target.value)}
-                placeholder="Apellidos"
+                placeholder="1er y 2do apellido"
                 className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 transition-colors placeholder:text-gray-300"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <input
+            <div className="grid grid-cols-1 gap-3">
+              {/* <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
                 type="email"
                 className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 transition-colors placeholder:text-gray-300"
-              />
+              /> */}
               <input
                 value={celular}
                 onChange={(e) => setCelular(e.target.value)}
@@ -495,7 +494,12 @@ ${lineasProductos}
               />
               <span className="text-xs text-gray-500 leading-relaxed">
                 He leído y acepto los{" "}
-                <span className="underline cursor-pointer hover:text-gray-800 transition-colors">
+                <span
+                  className="underline cursor-pointer hover:text-gray-800 transition-colors"
+                  onClick={() => {
+                    window.open("/terminos-condiciones", "_blank");
+                  }}
+                >
                   Términos y Condiciones
                 </span>{" "}
                 de compra del sitio web.
@@ -509,7 +513,7 @@ ${lineasProductos}
               className="w-full py-4 bg-gray-900 text-white text-sm tracking-widest uppercase rounded-full flex items-center justify-center gap-2 hover:bg-gray-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
             >
               <Lock size={14} />
-              Ir a pagar
+              Realizar pedido
             </button>
           </div>
 

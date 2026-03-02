@@ -195,7 +195,7 @@ export default function Page() {
           <div className="space-y-3 text-sm text-gray-600 pt-6">
             <div className="flex items-center gap-2">
               <span className="font-medium">✓</span>
-              <span>Envío gratis en compras mayores a s/ 100</span>
+              <span>Envío a todo el Perú</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="font-medium">✓</span>
@@ -203,7 +203,7 @@ export default function Page() {
             </div>
             <div className="flex items-center gap-2">
               <span className="font-medium">✓</span>
-              <span>Garantía de satisfacción</span>
+              <span>Seguridad y Confianza</span>
             </div>
           </div>
         </div>

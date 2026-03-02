@@ -14,11 +14,11 @@ const Footer = () => {
       name: 'Mi cuenta',
       link: '/perfil'
     },
-    // {
-    //   id: 4,
-    //   name: 'Términos y condiciones',
-    //   link: '/terminos-y-condiciones'
-    // }
+    {
+      id: 4,
+      name: 'Términos y condiciones',
+      link: '/terminos-condiciones'
+    }
   ];
 
   const socialMedia = [
@@ -32,7 +32,7 @@ const Footer = () => {
     {
       id: 2,
       name: 'TikTok',
-      link: 'https://www.tiktok.com/@shanti.blush2',
+      link: 'https://www.tiktok.com/@shanti.blush',
       ariaLabel: 'Visita nuestro TikTok',
       type: 'tiktok'
     },
