@@ -2,11 +2,16 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
-const MenuMovile = () => {
+
+type MenuMovileProps = {
+  isTransparent: boolean;
+};
+
+const MenuMovile = ({ isTransparent }: MenuMovileProps) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Menu />
+        <Menu className={isTransparent ? "text-white" : "text-black"} />
       </PopoverTrigger>
       <PopoverContent className="bg-white border rounded-xs border-gray-300 shadow-2xl">
         <Link href="/catalogo/polos" className="block my-3">Polos</Link>

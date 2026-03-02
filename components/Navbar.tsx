@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useSyncExternalStore, useRef, useEffect } from "react";
 import MenuList from "./MenuList";
 import MenuMovile from "./MenuMovile";
+import useCurrentPath from "@/hooks/usePathname";
 
 function subscribe(callback: () => void) {
   window.addEventListener("storage", callback);
@@ -43,11 +44,14 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const userData = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const userData = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  const { isHome } = useCurrentPath();
+  const isTransparent = isHome && !scrolled;
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 0);
+      // setScrolled(window.scrollY > 0);
+      setScrolled(window.scrollY > 300);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -73,34 +77,38 @@ const Navbar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 z-50 bg-white transition-shadow ${scrolled ? "shadow-sm" : ""
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300
+  ${isTransparent ? "bg-transparent" : "bg-white shadow-sm"}
+`}
     >
       <div className="flex items-center justify-between p-4 sm:max-w-4xl md:max-w-7xl mx-auto xl:px-0">
         <div className="flex sm:hidden self-end">
-          <MenuMovile />
+          <MenuMovile isTransparent={isTransparent} />
         </div>
 
         <h1
-          className="text-md xss:text-2xl xs:text-3xl cursor-pointer font-medium"
+          // className="text-md xss:text-2xl xs:text-3xl cursor-pointer font-medium"
+          className={`text-md xss:text-2xl xs:text-3xl cursor-pointer font-medium transition-colors duration-300
+  ${isTransparent ? "text-white" : "text-black"}
+`}
           onClick={() => router.push("/")}
         >
           S H A N T I
         </h1>
 
         <div className="hidden sm:flex items-center justify-between">
-          <MenuList />
+          <MenuList isTransparent={isTransparent} />
         </div>
 
         <div className="flex items-center justify-between gap-7">
           <ShoppingCart
             strokeWidth="1.1"
-            className="cursor-pointer transition-transform duration-200 ease-out hover:scale-108"
+            className={`cursor-pointer transition-transform duration-200 ease-out hover:scale-108 ${isTransparent ? "text-white" : "text-black"}`}
             onClick={() => router.push("/carrito")}
           />
           <ShoppingBag
             strokeWidth="1.1"
-            className="cursor-pointer transition-transform duration-200 ease-out hover:scale-108"
+            className={`cursor-pointer transition-transform duration-200 ease-out hover:scale-108 ${isTransparent ? "text-white" : "text-black"}`}
             onClick={() => router.push("/catalogo")}
           />
 
@@ -147,7 +155,7 @@ const Navbar = () => {
           ) : (
             <User
               strokeWidth="1.1"
-              className="cursor-pointer transition-transform duration-200 ease-out hover:scale-108"
+              className={`cursor-pointer transition-transform duration-200 ease-out hover:scale-108 ${isTransparent ? "text-white" : "text-black"}`}
               onClick={() => router.push("/perfil")}
             />
           )}

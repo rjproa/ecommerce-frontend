@@ -12,7 +12,7 @@ const BannerProduct = () => {
 
           <h4 className="mt-2 text-3xl font-extrabold uppercase px-4 md:px-0">Descubre tu Look ideal para cada momento</h4>
           <p className="py-6 text-lg">Moda femenina pensada en <span className="text-2xl">NOSOTRAS</span></p>
-          <Link href="#" className="bg-gray-800 text-white px-6 py-2 rounded-full hover:bg-gray-600 hover:transition-all hover:duration-200">Comprar</Link>
+          <Link href="/catalogo" className="bg-gray-800 text-white px-6 py-2 rounded-full hover:bg-gray-600 hover:transition-all hover:duration-200">Comprar</Link>
         </Reveal>
         <div className="pt-12">
           <div

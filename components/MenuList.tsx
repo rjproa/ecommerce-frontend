@@ -1,9 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
+// /* eslint-disable @next/next/no-img-element */
 "use client"
 
 import * as React from "react"
 import Link from "next/link"
 import { Instagram } from "lucide-react"
+import { usePathname } from "next/navigation"
 
 import {
   NavigationMenu,
@@ -13,6 +14,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
+
 import Image from "next/image"
 
 const components: { title: string; href: string; description: string }[] = [
@@ -47,18 +49,27 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ]
 
-const MenuList = () => {
+type MenuListProps = {
+  isTransparent: boolean;
+}
+
+const MenuListStyles = {
+  enlaces: (isTransparent: boolean) => `font-light transition-colors tracking-widest duration-300 ${isTransparent ? "text-white" : "text-black"}`,
+}
+
+
+const MenuList = ({ isTransparent }: MenuListProps) => {
 
   return (
     <NavigationMenu>
       <NavigationMenuList className="flex-wrap lg:gap-x-9">
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/nosotros" className="font-medium">Nosotros</Link>
+            <Link href="/nosotros" className={MenuListStyles.enlaces(isTransparent)}>Nosotros</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="cursor-pointer">Catálogo</NavigationMenuTrigger>
+          <NavigationMenuTrigger className={MenuListStyles.enlaces(isTransparent)}>Catálogo</NavigationMenuTrigger>
           <NavigationMenuContent className="bg-white">
             <ul className="grid gap-2 sm:w-100 md:w-125 md:grid-cols-2 lg:w-150">
               {components.map((component) => (
@@ -75,7 +86,7 @@ const MenuList = () => {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem className="hidden md:block">
-          <NavigationMenuTrigger className="cursor-pointer">Encuéntranos</NavigationMenuTrigger>
+          <NavigationMenuTrigger className={MenuListStyles.enlaces(isTransparent)}>Encuéntranos</NavigationMenuTrigger>
           <NavigationMenuContent className="bg-white">
             <ul className="grid w-50 gap-4" >
               <li>
@@ -99,7 +110,7 @@ const MenuList = () => {
           </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
-    </NavigationMenu>
+    </NavigationMenu >
   )
 }
 

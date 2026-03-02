@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
         hostname: "**.media.strapiapp.com",
       },
     ],
+    dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
   },
 };
 
