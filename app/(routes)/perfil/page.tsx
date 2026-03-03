@@ -15,76 +15,35 @@ export default function Perfil() {
     e.preventDefault();
     setError("");
 
-    console.log('=== INICIO LOGIN ===');
-    console.log('📝 Código ingresado:', codigo);
-    console.log('📝 Password ingresado:', password);
-    console.log('📏 Longitud código:', codigo.length);
-    console.log('📏 Longitud password:', password.length);
-
-    // Validaciones
     if (codigo.length !== 5) {
-      console.log('❌ Validación fallida: código no tiene 5 dígitos');
       setError("El código debe tener 5 dígitos");
       return;
     }
 
     if (password.length !== 8) {
-      console.log('❌ Validación fallida: password no tiene 8 caracteres');
       setError("La contraseña debe tener 8 caracteres");
       return;
     }
 
-    console.log('✅ Validaciones pasadas');
     setLoading(true);
 
     try {
-      console.log('🔍 Buscando cliente con código:', codigo);
-      console.log('🌐 URL Backend:', process.env.NEXT_PUBLIC_BACKEND_URL);
-
-      // Obtener todos los clientes
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clientes`
       );
 
-      console.log('📡 Response status:', response.status);
-      console.log('📡 Response ok:', response.ok);
-
       const data = await response.json();
-      console.log('📦 Data completa recibida:', JSON.stringify(data, null, 2));
-      console.log('📦 Cantidad de clientes:', data.data?.length);
 
       if (response.ok && data.data && data.data.length > 0) {
-        console.log('🔎 Buscando cliente en array...');
-        console.log('🔎 Clientes disponibles:', data.data.map((c: any) => ({
-          codigo: c.codigo,
-          nombre: c.nombre,
-          documentId: c.documentId
-        })));
-
-        // Buscar el cliente con el código específico
         const cliente = data.data.find((c: any) => {
-          console.log(`🔍 Comparando: "${c.codigo}" === "${codigo}" ?`, c.codigo === codigo);
           return c.codigo === codigo;
         });
 
-        console.log('👤 Cliente encontrado:', cliente);
-
         if (!cliente) {
-          console.log('❌ No se encontró cliente con ese código');
           setError("Código de usuario no encontrado");
           setLoading(false);
           return;
         }
-
-        console.log('✅ Cliente encontrado:', {
-          nombre: cliente.nombre,
-          documentId: cliente.documentId,
-          codigo: cliente.codigo
-        });
-
-        // Validar password
-        console.log('🔐 Validando password para documentId:', cliente.documentId);
-        console.log('🔐 URL validate:', `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clientes/validate-password`);
 
         const loginResponse = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clientes/validate-password`,
@@ -100,11 +59,7 @@ export default function Perfil() {
           }
         );
 
-        console.log('🔑 Login response status:', loginResponse.status);
-        console.log('🔑 Login response ok:', loginResponse.ok);
-
         const loginData = await loginResponse.json();
-        console.log('🔑 Login data:', JSON.stringify(loginData, null, 2));
 
         if (loginResponse.ok && loginData.valid) {
           // Guardar datos en localStorage
@@ -117,36 +72,23 @@ export default function Perfil() {
             opcion: cliente.opcion, // 👈 agrega esto
           };
 
-          console.log('💾 Guardando en localStorage:', userData);
 
           localStorage.setItem("userData", JSON.stringify(userData));
           document.cookie = `userData=${JSON.stringify(userData)}; path=/; max-age=86400`;
 
           window.dispatchEvent(new Event("storage"));
 
-
-          console.log('✅ Datos guardados en localStorage');
-          console.log('✅ Redirigiendo a /ruleta');
-
-          // Redirigir a /ruleta
           router.push("/ruleta");
         } else {
-          console.log('❌ Password incorrecto o respuesta inválida');
-          console.log('❌ loginData.valid:', loginData.valid);
           setError("Contraseña incorrecta");
         }
       } else {
-        console.log('❌ Error en la respuesta o sin datos');
         setError("Error al conectar con el servidor");
       }
     } catch (err) {
-      console.error("💥 Error completo:", err);
-      console.error("💥 Error message:", (err as Error).message);
-      console.error("💥 Error stack:", (err as Error).stack);
       setError("Error al iniciar sesión. Intenta nuevamente.");
     } finally {
       setLoading(false);
-      console.log('=== FIN LOGIN ===\n');
     }
   };
 

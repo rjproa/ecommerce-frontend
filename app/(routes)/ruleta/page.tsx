@@ -59,6 +59,38 @@ function RuletaContent() {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!userData?.documentId) return;
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clientes?filters[documentId][$eq]=${userData.documentId}`
+        );
+
+        const data = await res.json();
+
+        const newData = {
+          habilitado: data.data[0].habilitado,
+          puntos: data.data[0].puntos,
+          opcion: data.data[0].opcion,
+        }
+
+        const updatedUserData = { ...userData, ...newData };
+
+        localStorage.setItem("userData", JSON.stringify(updatedUserData));
+        document.cookie = `userData=${JSON.stringify(updatedUserData)}; path=/; max-age=86400`;
+        window.dispatchEvent(new Event("storage"));
+
+        setUserData(updatedUserData);
+      } catch (error) {
+        console.error("Error al obtener cliente:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const habilitado = userData?.habilitado ?? false;
 
   const girar = async () => {
