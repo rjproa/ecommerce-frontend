@@ -17,6 +17,15 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**.media.strapiapp.com",
       },
+      {
+        protocol: "https",
+        hostname: "ecommerce-backend-y9yq.onrender.com",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      }
     ],
     dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
   },
