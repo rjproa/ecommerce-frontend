@@ -5,6 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { ShoppingCart, ArrowLeft, Heart } from "lucide-react";
 import { useState } from "react";
+import WhatsappIcon from "@/components/icons/WhatsappIcon";
+import Friends from "@/components/icons/Friends";
 
 interface ProductImage {
   id: number;
@@ -162,6 +164,55 @@ export default function Page() {
                 {product.description}
               </p>
               <span className={`${product.active ? "hidden" : "text-red-500 font-bold mt-4 block px-2"}`}>AGOTADO</span>
+              <div className="w-full flex items-center mt-10">
+                <a
+                  href={
+                    product.active
+                      ? `https://wa.me/51903452600?text=${encodeURIComponent(
+                        `Hola!\n\n` +
+                        `Tengo algunas consultas sobre este producto:\n\n` +
+                        `*${product.productName}*\n` +
+                        `- Precio: S/ ${product.price}\n` +
+                        `- https://shantiperu.vercel.app/prenda/${product.slug}\n\n` +
+                        `¿Podrían darme más información sobre la prenda?`
+                      )}`
+                      : undefined
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`w-1/2 py-3 px-4 text-xs rounded-md flex items-center justify-center gap-6 font-medium transition-all ${product.active
+                    ? "bg-gray-600 hover:bg-gray-700 text-white cursor-pointer"
+                    : "bg-gray-600 opacity-20 cursor-not-allowed pointer-events-none"
+                    }`}
+                >
+                  <WhatsappIcon size={20} />
+                  Consultar por WhatsApp
+                </a>
+                <div className="ml-auto">
+                  <a
+                    href={
+                      product.active
+                        ? `https://wa.me/?text=${encodeURIComponent(
+                          `Hola!, te comparto esta hermosa prenda.\n\n` +
+                          `*${product.productName}*\n\n` +
+                          `- ${product.description}\n\n` +
+                          `https://shantiperu.vercel.app/prenda/${product.slug}`
+                        )}`
+                        : undefined
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+
+                    className={`ml-auto w-15 h-15 mr-10  rounded-full flex items-center justify-center border transition-all ${product.active
+                      ? "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 cursor-pointer"
+                      : "border-gray-200 text-gray-400 opacity-40 cursor-not-allowed pointer-events-none"
+                      }`}
+                  >
+                    <Friends />
+                    {/* <span className="hidden sm:block text-xs">Compartir con amigos</span> */}
+                  </a>
+                </div>
+              </div>
             </div>
           )}
 
@@ -188,6 +239,23 @@ export default function Page() {
               <ShoppingCart size={20} />
               {added ? "¡Agregado al carrito!" : "Agregar al carrito"}
             </button>
+            <a
+              href={product.active ? `https://wa.me/51903452600?text=${encodeURIComponent(
+                `Hola!, quiero comprar este producto:\n\n` +
+                `${product.productName} \n\n` +
+                `- Precio:  S/ ${product.price}\n` +
+                `- https://shantiperu.vercel.app/prenda/${product.slug}\n\n`
+              )}` : undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`w-full py-4 rounded-md flex items-center justify-center gap-2 font-medium text-white transition-all ${product.active
+                ? "bg-green-500 hover:bg-green-600 cursor-pointer"
+                : "bg-green-500 opacity-20 cursor-not-allowed pointer-events-none"
+                }`}>
+              {/* > */}
+              <WhatsappIcon size={20} />
+              Compra Rápida
+            </a>
 
           </div>
 
