@@ -8,6 +8,11 @@ export type ProductType = {
   active: boolean;
   isFeatured: boolean;
   station: string;
+  colores: Array<{
+    color: string;
+    stock: number;
+    nombreColor: string;
+  }>;
   images: Array<{
     id: number;
     documentId: string;

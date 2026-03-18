@@ -20,6 +20,20 @@ interface Product {
   images: ProductImage[];
 }
 
+interface CartColorDetail {
+  color: string;
+  nombreColor: string;
+  cantidad: number;
+}
+
+interface CartDetail {
+  quantity: number;
+  colors: CartColorDetail[];
+}
+
+// { [slug]: CartDetail }
+type CartDetails = Record<string, CartDetail>;
+
 interface CartSidebarProps {
   open: boolean;
   onClose: () => void;
@@ -28,18 +42,22 @@ interface CartSidebarProps {
 export default function CartSidebar({ open, onClose }: CartSidebarProps) {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
+  const [cartDetails, setCartDetails] = useState<CartDetails>({});
   const [loading, setLoading] = useState(false);
 
   const fetchCartProducts = useCallback(async () => {
     const slugs: string[] = JSON.parse(localStorage.getItem("cart") || "[]");
+    const details: CartDetails = JSON.parse(localStorage.getItem("cartDetails") || "{}");
+
     if (slugs.length === 0) {
       setProducts([]);
+      setCartDetails({});
       return;
     }
 
+    setCartDetails(details);
     setLoading(true);
     try {
-      // Un solo fetch con todos los slugs usando filtros OR de Strapi
       const filters = slugs
         .map((slug, i) => `filters[$or][${i}][slug][$eq]=${slug}`)
         .join("&");
@@ -55,12 +73,10 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
     }
   }, []);
 
-  // Cargar productos al abrir
   useEffect(() => {
     if (open) fetchCartProducts();
   }, [open, fetchCartProducts]);
 
-  // Escuchar cambios en localStorage (desde ProductCard)
   useEffect(() => {
     const handleStorage = () => {
       if (open) fetchCartProducts();
@@ -73,11 +89,30 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
     const cart: string[] = JSON.parse(localStorage.getItem("cart") || "[]");
     const updated = cart.filter((s) => s !== slug);
     localStorage.setItem("cart", JSON.stringify(updated));
+
+    const details: CartDetails = JSON.parse(localStorage.getItem("cartDetails") || "{}");
+    delete details[slug];
+    localStorage.setItem("cartDetails", JSON.stringify(details));
+
     window.dispatchEvent(new Event("storage"));
     setProducts((prev) => prev.filter((p) => p.slug !== slug));
+    setCartDetails((prev) => {
+      const updated = { ...prev };
+      delete updated[slug];
+      return updated;
+    });
   };
 
-  const total = products.reduce((sum, p) => sum + p.price, 0);
+  // Precio total: suma de (precio × cantidad) por producto
+  const total = products.reduce((sum, p) => {
+    const qty = cartDetails[p.slug]?.quantity ?? 1;
+    return sum + p.price * qty;
+  }, 0);
+
+  // Cantidad total de unidades en el carrito
+  const totalUnits = products.reduce((sum, p) => {
+    return sum + (cartDetails[p.slug]?.quantity ?? 1);
+  }, 0);
 
   const getImageSrc = (images: ProductImage[]) => {
     const img = images?.[0];
@@ -108,9 +143,9 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
             <span className="text-sm font-medium tracking-widest uppercase text-gray-800">
               Carrito
             </span>
-            {products.length > 0 && (
+            {totalUnits > 0 && (
               <span className="ml-1 bg-gray-900 text-white text-[10px] font-medium rounded-full w-5 h-5 flex items-center justify-center">
-                {products.length}
+                {totalUnits}
               </span>
             )}
           </div>
@@ -154,6 +189,11 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
             <div className="flex flex-col divide-y divide-gray-50">
               {products.map((product) => {
                 const imgSrc = getImageSrc(product.images);
+                const detail = cartDetails[product.slug];
+                const qty = detail?.quantity ?? 1;
+                const colors = detail?.colors ?? [];
+                const subtotal = product.price * qty;
+
                 return (
                   <div key={product.slug} className="flex gap-4 py-4">
                     {/* Imagen */}
@@ -172,17 +212,20 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
                     )}
 
                     {/* Info */}
-                    <div className="flex-1 flex flex-col justify-between min-w-0">
+                    <div className="flex-1 flex flex-col justify-between min-w-0 gap-1">
+                      {/* Nombre + botón eliminar */}
                       <div className="flex items-start justify-between gap-2">
                         <p
                           className="group relative text-sm font-light text-gray-800 leading-snug cursor-pointer inline-block"
-                          onClick={() => router.push(`/prenda/${product.slug}`)}
+                          onClick={() => {
+                            router.push(`/prenda/${product.slug}`)
+                            onClose();
+                          }}
                         >
                           <span className="transition-all duration-300 group-hover:tracking-wide group-hover:text-black">
                             {product.productName}
                           </span>
-
-                          <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-black transition-all duration-300 group-hover:w-full"></span>
+                          <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-black transition-all duration-300 group-hover:w-full" />
                         </p>
                         <button
                           onClick={() => handleRemove(product.slug)}
@@ -194,9 +237,40 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
                           />
                         </button>
                       </div>
-                      <p className="text-sm font-medium text-gray-900">
-                        S/ {product.price.toFixed(2)}
-                      </p>
+
+                      {/* Colores y cantidades */}
+                      {colors.length > 0 && (
+                        <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                          {colors.map((c, i) => (
+                            <div key={i} className="flex items-center gap-1">
+                              <div
+                                className="w-3 h-3 rounded-full border border-gray-200 shrink-0"
+                                style={{ backgroundColor: `#${c.color}` }}
+                              />
+                              <span className="text-[10px] text-gray-400 capitalize">
+                                {c.nombreColor}
+                                {c.cantidad > 1 && (
+                                  <span className="ml-0.5 text-gray-500 font-medium">
+                                    ×{c.cantidad}
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Precio */}
+                      <div className="flex items-baseline gap-1.5 mt-0.5">
+                        <p className="text-sm font-medium text-gray-900">
+                          S/ {subtotal.toFixed(2)}
+                        </p>
+                        {qty > 1 && (
+                          <span className="text-[10px] text-gray-400">
+                            ({qty} × S/ {product.price.toFixed(2)})
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );
@@ -208,14 +282,19 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
         {/* Footer */}
         {products.length > 0 && (
           <div className="border-t border-gray-100 px-6 py-5 flex flex-col gap-4">
-            {/* Resumen */}
             <div className="flex flex-col gap-2 text-sm text-gray-600">
               <div className="flex justify-between">
                 <span className="font-light">
+                  {totalUnits} {totalUnits === 1 ? "unidad" : "unidades"} ·{" "}
                   {products.length} {products.length === 1 ? "prenda" : "prendas"}
                 </span>
                 <span className="font-light">
-                  {products.map((p) => `S/ ${p.price.toFixed(2)}`).join(" + ")}
+                  {products
+                    .map((p) => {
+                      const qty = cartDetails[p.slug]?.quantity ?? 1;
+                      return `S/ ${(p.price * qty).toFixed(2)}`;
+                    })
+                    .join(" + ")}
                 </span>
               </div>
               <div className="flex justify-between pt-2 border-t border-gray-100">
@@ -228,7 +307,6 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
               </div>
             </div>
 
-            {/* Botón */}
             <button
               onClick={() => { router.push("/carrito"); onClose(); }}
               className="w-full py-3.5 bg-gray-900 text-white text-xs font-medium tracking-widest uppercase rounded-full hover:bg-gray-800 active:scale-[0.98] transition-all duration-200"

@@ -28,14 +28,25 @@ const ChooseCategories = () => {
               >
                 {/* Círculo con imagen */}
                 <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-30 md:h-30 rounded-full overflow-hidden bg-gray-100 ring-2 ring-gray-200 transition-all duration-300 group-hover:ring-1 group-hover:ring-gray-300 group-hover:shadow-lg">
-                  <img
+                  {/* <img
                     src={categoria.imagenCategoria.url.startsWith('http')
                       ? categoria.imagenCategoria.url
                       : `${process.env.NEXT_PUBLIC_BACKEND_URL}${categoria.imagenCategoria.url}`
                     }
                     alt={categoria.nombreCategoria}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
+                  /> */}
+                  <img
+                    src={
+                      categoria.imagenCategoria?.url
+                        ? categoria.imagenCategoria.url.startsWith("http")
+                          ? categoria.imagenCategoria.url
+                          : `${process.env.NEXT_PUBLIC_BACKEND_URL}${categoria.imagenCategoria.url}`
+                        : "/placeholder.png" // imagen fallback
+                    }
+                    alt={categoria.nombreCategoria}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  /> nmn
                   {/* Overlay sutil */}
                   <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-gray-400/20" />
                 </div>

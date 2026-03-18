@@ -42,7 +42,7 @@ export default function WhatsAppFloat() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-14 right-10 z-50 flex flex-col items-end gap-2">
+    <div className="fixed bottom-44 right-10 z-50 flex flex-col items-end gap-2">
 
       {/* Burbuja de mensaje */}
       <div

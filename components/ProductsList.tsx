@@ -50,6 +50,7 @@ const ProductList = () => {
                   price={product.price}
                   active={product.active}
                   images={product.images}
+                  colores={product.colores}
                 />
               </Reveal>
             ))}

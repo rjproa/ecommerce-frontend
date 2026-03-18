@@ -31,6 +31,7 @@ const FeaturedProducts = () => {
                       price={product.price}
                       images={product.images}
                       active={product.active}
+                      colores={product.colores}
                     />
                   </div>
                 </CarouselItem>

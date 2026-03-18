@@ -6,6 +6,12 @@ import SkeletonSchema from "@/components/SkeletonShema";
 import ProductCard from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
 
+interface Color {
+  color: string;
+  stock: number;
+  nombreColor: string;
+}
+
 interface ProductImage {
   id: number;
   url: string;
@@ -22,6 +28,7 @@ interface Product {
   active: boolean;
   price: number;
   isFeatured: boolean;
+  colores: Color[];
   images: ProductImage[];
   categoria: {
     nombreCategoria: string;
@@ -71,6 +78,7 @@ export default function Page() {
                 price={product.price}
                 active={product.active}
                 images={product.images}
+                colores={product.colores}
               />
             </Reveal>
           ))}
