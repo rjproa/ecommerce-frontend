@@ -19,12 +19,13 @@ interface ProductImage {
 }
 
 interface Product {
-  id: number;
+  id: number; 
   documentId: string;
   productName: string;
   slug: string;
   description: string;
   active: boolean;
+  oferta: boolean;
   price: number;
   isFeatured: boolean;
   colores: Colores[];
@@ -171,6 +172,7 @@ export default function Page() {
                 slug={product.slug}
                 price={product.price}
                 active={product.active}
+                oferta={product.oferta}
                 images={product.images}
                 colores={product.colores}
               />

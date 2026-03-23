@@ -8,6 +8,7 @@ type MenuMovileProps = {
 };
 
 const LINKS = [
+  { href: "/ofertas", label: "Prendas en Oferta" },
   { href: "/catalogo/polos", label: "Polos" },
   { href: "/catalogo/corset", label: "Corsets" },
   { href: "/catalogo/blusas", label: "Blusas" },

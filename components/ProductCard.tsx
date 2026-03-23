@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import { Expand, ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
 import IconButton from "./IconButton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -26,6 +26,7 @@ interface ProductCardProps {
   slug: string;
   price: number;
   active: boolean;
+  oferta: boolean;
   images: ProductImage[];
   colores?: Colores[];
   onAddToCart?: (id: number) => void;
@@ -37,13 +38,13 @@ export default function ProductCard({
   slug,
   price,
   active,
+  oferta,
   images,
   colores = [],
-  onAddToCart,
 }: ProductCardProps) {
+
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [added, setAdded] = useState(false);
 
   if (!images || images.length === 0) return null;
 
@@ -88,6 +89,37 @@ export default function ProductCard({
                 }}
               >
                 AGOTADO
+              </span>
+            </div>
+          )}
+
+          {/* Sello de oferta */}
+          {/* Sello de oferta — Cinta diagonal */}
+          {oferta && (
+            <div className="absolute top-0 right-0 z-10 w-20 h-20 overflow-hidden rounded-tr-lg">
+              <div
+                className="absolute top-0 right-0"
+                style={{
+                  width: 0,
+                  height: 0,
+                  borderStyle: "solid",
+                  borderWidth: "0 80px 80px 0",
+                  borderColor: "transparent #c8102e transparent transparent",
+                }}
+              />
+              <span
+                className="absolute text-white font-medium uppercase tracking-widest"
+                style={{
+                  fontSize: "9px",
+                  top: "24px",
+                  right: "-14px",
+                  width: "90px",
+                  textAlign: "center",
+                  fontWeight: "bolder",
+                  transform: "rotate(45deg)",
+                }}
+              >
+                Liquidación
               </span>
             </div>
           )}
@@ -176,7 +208,7 @@ export default function ProductCard({
             s/ {price}
           </span>
           <span className="text-sm text-gray-400 line-through">
-            s/ {price + 10.9}
+            s/ {price + 5.9}
           </span>
         </div>
       </Card>

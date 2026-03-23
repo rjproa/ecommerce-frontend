@@ -6,6 +6,7 @@ export type ProductType = {
   description: string;
   price: number;
   active: boolean;
+  oferta: boolean;
   isFeatured: boolean;
   station: string;
   colores: Array<{

@@ -28,6 +28,7 @@ interface Product {
   slug: string;
   description: string;
   active: boolean;
+  oferta: boolean;
   price: number;
   isFeatured: boolean;
   colores: Colores[];
@@ -233,12 +234,18 @@ export default function Page() {
               s/ {product.price}
             </span>
             <span className="text-sm text-gray-800 line-through">
-              s/ {product.price + 10.9}
+              s/ {product.price + 5.9}
             </span>
             <span className="text-sm text-green-600 font-medium">
-              Ahorra más de s/ 10
+              Ahorra más de s/ 5
             </span>
           </div>
+
+          {product.oferta && (
+            <div className="px-3 py-1 bg-green-600 text-white text-xs font-medium inline-block rounded-full">
+              ¡Prenda en Liquidación!
+            </div>
+          )}
 
           {/* Descripción */}
           {product.description && (
@@ -266,20 +273,22 @@ export default function Page() {
               <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-3">
                 Colores disponibles
               </p>
-              <div className="flex items-center gap-10   flex-wrap">
+              <div className="flex items-center gap-10 flex-wrap ml-3">
                 {product.colores.map((c, i) => (
-                  <div key={i} className="flex flex-col items-center gap-1">
+                  <div key={i} className="flex flex-col items-center gap-1 mt-8">
                     <div className="relative w-8 h-8">
                       <div
-                        className={`w-8 h-8 rounded-full border border-gray-600 flex justify-center ${c.stock === 0 ? "opacity-70" : ""
+                        className={`w-8 h-8 rounded-full border border-gray-600 flex justify-center ${c.stock === 0 ? "opacity-60" : ""
                           }`}
                         style={{ backgroundColor: `#${c.color}` }}
                       >
-                        {c.stock === 0 && (
-                          <span className="text-2xl pb-2 text-black">X</span>
-                        )}
 
                       </div>
+                      {
+                        c.stock === 0 && (
+                          <span className="text-[10px] absolute -top-8 -left-2.5 px-2 py-1 bg-[#101720] text-white rounded-3xl">Agotado</span>
+                        )
+                      }
                     </div>
                     <span className="text-[10px] text-gray-500 capitalize">
                       {c.nombreColor}
@@ -532,6 +541,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

@@ -49,6 +49,7 @@ const ProductList = () => {
                   slug={product.slug}
                   price={product.price}
                   active={product.active}
+                  oferta={product.oferta}
                   images={product.images}
                   colores={product.colores}
                 />

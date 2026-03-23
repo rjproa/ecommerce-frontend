@@ -19,6 +19,12 @@ import Image from "next/image"
 
 const components: { title: string; href: string; description: string }[] = [
   {
+    title: "Prendas en OFERTA",
+    href: "/ofertas",
+    description:
+      "¡Descubre nuestras prendas en oferta!",
+  },
+  {
     title: "Polos",
     href: "/catalogo/polos",
     description:

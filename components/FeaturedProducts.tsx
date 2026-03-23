@@ -14,7 +14,7 @@ const FeaturedProducts = () => {
   return (
     <div className="max-w-7xl mx-auto py-12 sm:py-16 px-6 xl:px-0">
       <Reveal delay={400}>
-        <h3 className="text-4xl font-light sm:pb-4 pb-8">Productos destacados</h3>
+        <h3 className="text-4xl font-light sm:pb-4 pb-8">Liquidación Total</h3>
       </Reveal>
       <Reveal delay={400}>
         <Carousel className="relative">
@@ -31,6 +31,7 @@ const FeaturedProducts = () => {
                       price={product.price}
                       images={product.images}
                       active={product.active}
+                      oferta={product.oferta}
                       colores={product.colores}
                     />
                   </div>
