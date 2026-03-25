@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingCart, ChevronLeft, ChevronRight, Expand } from "lucide-react";
 import IconButton from "./IconButton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -158,7 +158,7 @@ export default function ProductCard({
             <div className="flex justify-center gap-x-6">
               <IconButton
                 onClick={() => router.push(`/prenda/${slug}`)}
-                icon={<ShoppingCart size={20} />}
+                icon={<Expand size={20} />}
                 className="text-gray-600 cursor-pointer"
               />
               {/* <IconButton
