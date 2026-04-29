@@ -12,6 +12,7 @@ export default function Perfil() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
     setError("");
 
@@ -20,27 +21,29 @@ export default function Perfil() {
       return;
     }
 
-    if (password.length !== 8) {
-      setError("La contraseña debe tener 8 caracteres");
-      return;
-    }
+    // if (password.length !== 9) {
+    //   setError("La contraseña debe tener 9 caracteres");
+    //   return;
+    // }
 
     setLoading(true);
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clientes`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clientes?filters[codigo][$eq]=${codigo}`
       );
 
       const data = await response.json();
 
       if (response.ok && data.data && data.data.length > 0) {
         const cliente = data.data.find((c: any) => {
+          console.log(c.codigo);
+
           return c.codigo === codigo;
         });
 
         if (!cliente) {
-          setError("Código de usuario no encontrado");
+          setError("Código de usuario no encontradoooo");
           setLoading(false);
           return;
         }
@@ -147,7 +150,7 @@ export default function Perfil() {
               <input
                 id="password"
                 type="password"
-                maxLength={8}
+                maxLength={9}
                 value={password}
                 onChange={(e) => {
                   console.log('🔑 Password onChange longitud:', e.target.value.length);
@@ -158,7 +161,7 @@ export default function Perfil() {
                 required
               />
               <p className="text-xs text-gray-400 mt-1 text-center">
-                8 caracteres
+                Contraseña
               </p>
             </div>
 
